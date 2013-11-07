@@ -30,4 +30,60 @@
 (define funny-number-stream
   (letrec ([f (lambda (x) (cons (if (= (remainder x 5) 0) (- x) x)
                                 (lambda () (f (+ x 1)))))])
-    (lambda () (f 1)))
+    (lambda () (f 1))))
+
+; problem 6
+(define dan-then-dog
+  (letrec ([f (lambda (x) (cons x 
+                                (lambda () (f (if (string=? "dan.jpg" x) "dog.jpg" "dan.jpg")))))])
+    (lambda () (f "dan.jpg"))))
+
+; problem 7
+(define (stream-add-zero s)
+  (letrec ([f (lambda(x) (cons 
+                          (cons 0 (car (x)))
+                          (lambda () (f (cdr (x))))))])
+    (lambda ()(f s))))
+
+; problem 8
+(define (cycle-lists xs ys)
+  (letrec ([f (lambda(x) (cons
+                          (cons (list-nth-mod xs x) (list-nth-mod ys x))
+                          (lambda() (f (+ x 1)))))])
+    (lambda() (f 0))))
+                                
+; problem 9
+(define (vector-assoc v vec)
+  (define (aux n) (if (>= n (vector-length vec))
+                      #f
+                      (let ([current (vector-ref vec n)])
+                        (if (pair? current)
+                            (if (equal? (car current) v) current (aux (+ n 1)))
+                            (aux (+ n 1))))))
+  (aux 0))
+
+; problem 10
+(define (cached-assoc xs n)
+  (letrec ([memo (make-vector n #f)]
+           [pos 0]
+           [f (lambda (v)
+                (let ([ans (vector-assoc v memo)])
+                  (if ans
+                      ans
+                      (let ([new-ans (assoc v xs)])
+                        (if new-ans
+                            (begin (vector-set! memo pos new-ans)
+                                   (set! pos (remainder (add1 pos) n))
+                                   new-ans)
+                            #f)))))])
+    f))
+
+; problem 11
+(define-syntax while-less
+  (syntax-rules (do)
+    [(while-less e1 do e2)
+     (letrec ([x (eval e1)]
+              [f (lambda (y) (if (< y x)
+                                 (begin (f e2) #t)
+                                 #f))])
+       (f e2))]))
