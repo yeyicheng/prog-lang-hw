@@ -4,31 +4,31 @@
 # part of your solution.
 
 class MyPiece < Piece
-  # The constant All_My_Pieces should be declared here
-  All_My_Pieces = Piece::All_Pieces.concat([
+	# The constant All_My_Pieces should be declared here
+	All_My_Pieces = Piece::All_Pieces.concat([
 				 rotations([[0, 0], [1, 0], [-1, 0], [1, 1], [0, 1]]),
 			     [[[0, 0], [-1, 0], [1, 0], [2, 0], [-2, 0]],
                  [[0, 0], [0, -1], [0, 1], [0, 2], [0, -2]]],
 			     rotations([[0, 0], [1, 0], [0, 1]])])
-  Cheat_piece = [[[0, 0]]]
+	Cheat_piece = [[[0, 0]]]
   
-  def initialize (point_array, board)
+	def initialize (point_array, board)
     super(point_array, board)
-  end
-  # your enhancements here
+	end
+	# your enhancements here
   			   
-  def self.next_piece (board)
-    MyPiece.new(All_My_Pieces.sample, board)
-  end
+	def self.next_piece (board)
+		MyPiece.new(All_My_Pieces.sample, board)
+	end
   
-  def self.next_cheat_piece(board)
-	MyPiece.new(Cheat_piece, board)
-  end
+	def self.next_cheat_piece(board)
+		MyPiece.new(Cheat_piece, board)
+	end
    
 end
 
 class MyBoard < Board
-  # your enhancements here
+	# your enhancements here
 	def initialize (game)
 		@grid = Array.new(num_rows) {Array.new(num_columns)}
 		@current_block = MyPiece.next_piece(self)
@@ -55,21 +55,21 @@ class MyBoard < Board
 		@current_pos = nil
 	end
   
-  def store_current
-    locations = @current_block.current_rotation
-    displacement = @current_block.position
-    (0..(locations.size-1)).each{|index| 
-      current = locations[index];
-      @grid[current[1]+displacement[1]][current[0]+displacement[0]] = 
-      @current_pos[index]
-    }
-    remove_filled
-    @delay = [@delay - 2, 80].max
-  end
+	def store_current
+		locations = @current_block.current_rotation
+		displacement = @current_block.position
+		(0..(locations.size-1)).each{|index| 
+			current = locations[index];
+			@grid[current[1]+displacement[1]][current[0]+displacement[0]] = 
+			@current_pos[index]
+		}
+		remove_filled
+		@delay = [@delay - 2, 80].max
+	end
 end
 
 class MyTetris < Tetris
-  # your enhancements here
+	# your enhancements here
 	def initialize
 		super
 	end
